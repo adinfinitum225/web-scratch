@@ -54,9 +54,41 @@ dark.fillColor = 'black';
 dark.fullySelected= true;
 console.log(dark.segments);
 console.log(dark.segments[2].handleOut.angle);
+console.log(dark.curves);
+console.log(dark.curves[0].getTangentAtTime(0));
+console.log(dark.curves[3].getTangentAtTime(1));
 
-// Maybe try two segments connected by curves with the proper angles based on longitutde
 
+// These are the paths to use for a moon
+var radius = 100;
+// Moon outline
+var cc = new Path.Circle({
+	center: [450, 200],
+	radius: [radius],
+	strokeColor: 'black',
+});
+
+// Define each direction point to allow easier use of arc functions
+var north = new Point(cc.position.x, cc.position.y - radius);
+var east = new Point(cc.position.x + radius, cc.position.y);
+var south = new Point(cc.position.x, cc.position.y + radius);
+// Use cosine of the age of the moon to get better match
+// 3.5 days should be halfway to first quarter moon
+var west = new Point(cc.position.x + (radius*Math.cos((3.5 * Math.PI)/14)), cc.position.y);
+// Sanity checks
+console.log("East");
+console.log(east.x);
+console.log(west);
+
+// Create the arcs for the shadow
+var shadow = new Path.Arc(north, east, south);
+shadow.arcTo(west, north);
+shadow.strokeColor = 'black';
+shadow.fillColor = 'grey';
+shadow.fullySelected = true;
+// More sanity checks
+angle = shadow.lastSegment.handleIn.angle;
+console.log("North handle in is "+ angle + " degrees");
 
 
 /*
